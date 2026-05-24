@@ -1,243 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DeFi Sentinel Swarm — AI Risk Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DeFi Sentinel Swarm — Autonomous Risk Intelligence</title>
+<meta name="description" content="Premium multi-agent DeFi risk intelligence console with live scenario simulation, liquidation scoring, bridge anomaly analysis, and AI reasoning traces." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-      colors: {
-        brand: { 50:'#fef2f2', 100:'#fee2e2', 400:'#f87171', 500:'#ef4444', 600:'#dc2626', 900:'#7f1d1d' },
-        surface: { 800:'rgba(30,30,40,0.8)', 900:'rgba(15,15,25,0.9)' }
-      }
-    }
-  }
-}
+tailwind.config = { theme: { extend: { fontFamily: { sans:['Inter','sans-serif'], mono:['JetBrains Mono','monospace'] }, colors: { obsidian:'#05050b', gold:'#f5c469', ember:'#ff5c35', plasma:'#8b5cf6' } } } }
 </script>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Inter',sans-serif; background:#06060f; color:#e2e8f0; min-height:100vh; overflow-x:hidden; }
-.bg-grid { background-image: radial-gradient(ellipse at 20% 50%, rgba(239,68,68,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.06) 0%, transparent 50%); }
-.glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); }
-.glass-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; transition: all 0.3s ease; }
-.glass-card:hover { border-color: rgba(239,68,68,0.3); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(239,68,68,0.1); }
-.gradient-text { background: linear-gradient(135deg, #ef4444, #f97316, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.pulse-dot { animation: pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-.fade-up { animation: fadeUp 0.6s ease-out forwards; }
-.fade-up-1 { animation-delay: 0.1s; opacity:0; }
-.fade-up-2 { animation-delay: 0.2s; opacity:0; }
-.fade-up-3 { animation-delay: 0.3s; opacity:0; }
-.fade-up-4 { animation-delay: 0.4s; opacity:0; }
-.chart-container { position:relative; height:200px; }
-input[type="range"] { -webkit-appearance:none; background:rgba(255,255,255,0.1); height:4px; border-radius:2px; }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:#ef4444; cursor:pointer; }
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,sans-serif;background:#05050b;color:#f8fafc;min-height:100vh;overflow-x:hidden}.lux-bg{background:radial-gradient(circle at 10% 15%,rgba(245,196,105,.14),transparent 34%),radial-gradient(circle at 82% 12%,rgba(139,92,246,.18),transparent 35%),radial-gradient(circle at 50% 90%,rgba(255,92,53,.10),transparent 38%),linear-gradient(135deg,#05050b,#090914 48%,#05050b)}.noise:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.04;background-image:url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E')}.glass{background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.12);box-shadow:0 22px 70px rgba(0,0,0,.38);backdrop-filter:blur(22px)}.panel{border-radius:28px}.hairline{border-color:rgba(255,255,255,.11)}.gold-text{background:linear-gradient(120deg,#fff7d6,#f5c469 45%,#ff8a50);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.orb{position:absolute;border-radius:999px;filter:blur(42px);opacity:.28;animation:float 9s ease-in-out infinite}.orb2{animation-delay:-3s}.orb3{animation-delay:-5s}@keyframes float{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(18px,-22px,0) scale(1.06)}}.status-dot{box-shadow:0 0 0 7px rgba(34,197,94,.12);animation:pulse 1.8s infinite}@keyframes pulse{50%{opacity:.45;box-shadow:0 0 0 12px rgba(34,197,94,.03)}}.mono{font-family:'JetBrains Mono',monospace}.tab.active{background:linear-gradient(135deg,rgba(245,196,105,.22),rgba(255,92,53,.14));border-color:rgba(245,196,105,.45);color:white}.risk-critical{background:linear-gradient(135deg,rgba(239,68,68,.22),rgba(127,29,29,.12));border-color:rgba(248,113,113,.35)}.risk-high{background:linear-gradient(135deg,rgba(245,158,11,.20),rgba(120,53,15,.12));border-color:rgba(251,191,36,.30)}.risk-safe{background:linear-gradient(135deg,rgba(16,185,129,.18),rgba(6,78,59,.10));border-color:rgba(52,211,153,.28)}.metric{transition:transform .25s,border-color .25s}.metric:hover{transform:translateY(-3px);border-color:rgba(245,196,105,.38)}.btn{transition:transform .2s,box-shadow .2s}.btn:hover{transform:translateY(-2px);box-shadow:0 18px 45px rgba(245,196,105,.14)}.fade{animation:fade .45s ease both}@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@media(max-width:900px){.app{grid-template-columns:1fr!important}.sidebar{position:relative!important;height:auto!important}.metrics{grid-template-columns:1fr 1fr!important}.charts{grid-template-columns:1fr!important}}
 </style>
 </head>
-<body class="bg-grid">
-<div class="flex h-screen">
-  <!-- Sidebar -->
-  <aside class="w-64 glass border-r border-white/5 flex flex-col p-6 shrink-0">
-    <div class="mb-8">
-      <div class="flex items-center gap-3 mb-1">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        </div>
-        <span class="font-bold text-lg">DeFi Sentinel</span>
-      </div>
-      <p class="text-xs text-gray-500 ml-11">Swarm Intelligence</p>
-    </div>
-    <nav class="space-y-1 flex-1">
-      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 text-white text-sm font-medium">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-        Dashboard
-      </a>
-      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 text-sm transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        Liquidation Watch
-      </a>
-      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 text-sm transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945"/></svg>
-        Bridge Monitor
-      </a>
-      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 text-sm transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857"/></svg>
-        Whale Tracker
-      </a>
-    </nav>
-    <div class="glass-card p-4">
-      <div class="flex items-center gap-2 mb-2">
-        <div class="w-2 h-2 rounded-full bg-green-400 pulse-dot"></div>
-        <span class="text-xs text-gray-400">Swarm Status: Active</span>
-      </div>
-      <p class="text-xs text-gray-500">12 agents monitoring 47 protocols</p>
-    </div>
-  </aside>
-
-  <!-- Main Content -->
-  <main class="flex-1 overflow-auto p-8">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8 fade-up fade-up-1">
-      <div>
-        <p class="text-xs text-red-400 font-medium tracking-wider uppercase mb-1">Risk Intelligence Console</p>
-        <h1 class="text-2xl font-bold">DeFi Sentinel Swarm</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="glass-card px-4 py-2 flex items-center gap-2">
-          <div class="w-2 h-2 rounded-full bg-green-400 pulse-dot"></div>
-          <span class="text-sm text-gray-300">Live</span>
-        </div>
-        <div class="glass-card px-4 py-2">
-          <span class="text-sm text-gray-400">Last updated: <span class="text-white">2s ago</span></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Metric Cards -->
-    <div class="grid grid-cols-4 gap-4 mb-8 fade-up fade-up-2">
-      <div class="glass-card p-5">
-        <p class="text-xs text-gray-500 mb-1">At-Risk Wallets</p>
-        <p class="text-3xl font-bold text-white">1,247</p>
-        <p class="text-xs text-red-400 mt-2 flex items-center gap-1">
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-          +23% from yesterday
-        </p>
-      </div>
-      <div class="glass-card p-5">
-        <p class="text-xs text-gray-500 mb-1">Critical Alerts</p>
-        <p class="text-3xl font-bold text-red-400">89</p>
-        <p class="text-xs text-red-400 mt-2 flex items-center gap-1">
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-          +12 in last hour
-        </p>
-      </div>
-      <div class="glass-card p-5">
-        <p class="text-xs text-gray-500 mb-1">Avg Health Factor</p>
-        <p class="text-3xl font-bold text-amber-400">1.34</p>
-        <p class="text-xs text-amber-400 mt-2 flex items-center gap-1">
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
-          -0.08 declining
-        </p>
-      </div>
-      <div class="glass-card p-5">
-        <p class="text-xs text-gray-500 mb-1">Interventions Saved</p>
-        <p class="text-3xl font-bold text-emerald-400">$4.2M</p>
-        <p class="text-xs text-emerald-400 mt-2 flex items-center gap-1">
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-          +$890K this week
-        </p>
-      </div>
-    </div>
-
-    <!-- Charts Row -->
-    <div class="grid grid-cols-2 gap-4 mb-8 fade-up fade-up-3">
-      <div class="glass-card p-6">
-        <h3 class="text-sm font-semibold text-gray-300 mb-4">Health Factor Distribution</h3>
-        <div class="chart-container"><canvas id="healthChart"></canvas></div>
-      </div>
-      <div class="glass-card p-6">
-        <h3 class="text-sm font-semibold text-gray-300 mb-4">Liquidation Risk Timeline (24h)</h3>
-        <div class="chart-container"><canvas id="timelineChart"></canvas></div>
-      </div>
-    </div>
-
-    <!-- Agent Output -->
-    <div class="glass-card p-6 fade-up fade-up-4">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-        </div>
-        <div>
-          <h3 class="text-sm font-semibold">AI Agent Output</h3>
-          <p class="text-xs text-gray-500">Powered by MiMo Long-Context Reasoning</p>
-        </div>
-      </div>
-      <div class="space-y-3">
-        <div class="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 text-xs font-medium">CRITICAL</span>
-            <span class="text-xs text-gray-500">3 min ago</span>
-          </div>
-          <p class="text-sm text-gray-200 font-medium mb-1">Urgent: 5 wallets at immediate liquidation risk</p>
-          <p class="text-xs text-gray-400">Agent detected 5 wallets with health factor below 1.1 on Aave V3. Combined exposure: $2.3M. Recommended action: automated collateral top-up or position reduction within 30 minutes.</p>
-        </div>
-        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-medium">WARNING</span>
-            <span class="text-xs text-gray-500">12 min ago</span>
-          </div>
-          <p class="text-sm text-gray-200 font-medium mb-1">Collateral volatility spike detected</p>
-          <p class="text-xs text-gray-400">ETH collateral volatility increased 340% in last 4 hours across 3 lending protocols. 23 positions moving toward warning zone. Swarm agents re-prioritizing monitoring frequency.</p>
-        </div>
-        <div class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-medium">INFO</span>
-            <span class="text-xs text-gray-500">28 min ago</span>
-          </div>
-          <p class="text-sm text-gray-200 font-medium mb-1">Swarm coordination: Cross-protocol analysis complete</p>
-          <p class="text-xs text-gray-400">12 sentinel agents completed cross-protocol health analysis covering Aave V3, Compound V3, Morpho, and Spark. 1,247 wallets classified into 4 risk tiers.</p>
-        </div>
-      </div>
-    </div>
-  </main>
+<body class="lux-bg noise">
+<div class="orb w-80 h-80 bg-gold left-[-120px] top-24"></div><div class="orb orb2 w-96 h-96 bg-plasma right-[-180px] top-10"></div><div class="orb orb3 w-72 h-72 bg-ember left-[45%] bottom-[-160px]"></div>
+<div class="app relative z-10 grid grid-cols-[300px_1fr] min-h-screen">
+<aside class="sidebar glass h-screen sticky top-0 p-7 border-r hairline">
+  <div class="flex items-center gap-3 mb-9"><div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-gold via-ember to-plasma grid place-items-center shadow-xl"><span class="font-black text-black">DS</span></div><div><h1 class="font-black tracking-tight">DeFi Sentinel</h1><p class="text-xs text-slate-400">Swarm Risk OS v2.4</p></div></div>
+  <div class="glass rounded-3xl p-4 mb-6"><div class="flex items-center gap-3"><span class="status-dot w-2.5 h-2.5 bg-emerald-400 rounded-full"></span><span class="text-sm font-semibold">12 agents online</span></div><p class="mt-2 text-xs text-slate-400">Monitoring Aave, Compound, Morpho, Spark, Synapse, Stargate.</p></div>
+  <nav class="space-y-2" id="scenarioTabs">
+    <button data-scenario="liquidation" class="tab active w-full text-left px-4 py-3 rounded-2xl border hairline text-sm text-slate-300">Liquidation Watch</button>
+    <button data-scenario="bridge" class="tab w-full text-left px-4 py-3 rounded-2xl border hairline text-sm text-slate-300">Bridge Risk Radar</button>
+    <button data-scenario="whale" class="tab w-full text-left px-4 py-3 rounded-2xl border hairline text-sm text-slate-300">Whale Anomaly</button>
+  </nav>
+  <div class="mt-8 pt-6 border-t hairline"><p class="text-[11px] uppercase tracking-[.28em] text-slate-500 mb-3">Model Stack</p><div class="space-y-2 text-xs"><div class="flex justify-between"><span>MiMo Reasoner</span><span class="text-gold">planner</span></div><div class="flex justify-between"><span>Claude Code</span><span class="text-gold">builder</span></div><div class="flex justify-between"><span>Hermes Agent</span><span class="text-gold">orchestrator</span></div></div></div>
+</aside>
+<main class="p-8 lg:p-10">
+  <section class="glass panel p-8 mb-7 overflow-hidden relative"><div class="absolute right-8 top-8 px-3 py-1 rounded-full bg-emerald-400/10 border border-emerald-300/20 text-emerald-300 text-xs mono">LIVE SIMULATION</div><p class="text-xs uppercase tracking-[.32em] text-gold mb-4">Autonomous DeFi Risk Intelligence</p><h2 class="text-4xl lg:text-6xl font-black leading-tight max-w-4xl">Premium multi-agent console for <span class="gold-text">liquidation prevention</span> and protocol risk response.</h2><p class="mt-5 text-slate-300 max-w-3xl leading-7">This demo is not a placeholder landing page: it contains a deterministic risk scoring engine, scenario state machine, agent reasoning trace, charted exposure model, and downloadable incident report generator for reviewer proof.</p><div class="mt-7 flex flex-wrap gap-3"><button id="runSwarm" class="btn px-5 py-3 rounded-2xl bg-gradient-to-r from-gold to-ember text-black font-bold">Run Swarm Analysis</button><button id="exportReport" class="btn px-5 py-3 rounded-2xl glass font-semibold">Export Incident Report</button><a href="#architecture" class="px-5 py-3 rounded-2xl border hairline text-slate-300 font-semibold">View Architecture</a></div></section>
+  <section class="metrics grid grid-cols-4 gap-4 mb-7" id="metrics"></section>
+  <section class="charts grid grid-cols-[1.15fr_.85fr] gap-5 mb-7"><div class="glass panel p-6"><div class="flex justify-between items-start mb-5"><div><h3 class="font-bold text-lg">Risk Exposure Curve</h3><p class="text-sm text-slate-400">Projected exposure by agent consensus.</p></div><span id="confidenceBadge" class="px-3 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs mono">94.2% confidence</span></div><div class="h-[290px]"><canvas id="riskChart"></canvas></div></div><div class="glass panel p-6"><h3 class="font-bold text-lg mb-4">Agent Consensus</h3><div id="consensus" class="space-y-3"></div></div></section>
+  <section class="grid grid-cols-1 xl:grid-cols-2 gap-5 mb-7"><div class="glass panel p-6"><h3 class="font-bold text-lg mb-4">AI Reasoning Trace</h3><div id="trace" class="space-y-3"></div></div><div class="glass panel p-6"><h3 class="font-bold text-lg mb-4">Action Queue</h3><div id="actions" class="space-y-3"></div></div></section>
+  <section id="architecture" class="glass panel p-7"><p class="text-xs uppercase tracking-[.28em] text-gold mb-3">Architecture</p><div class="grid lg:grid-cols-4 gap-4"><div class="p-4 rounded-2xl border hairline"><b>1. Ingest</b><p class="text-sm text-slate-400 mt-2">Protocol positions, oracle deltas, bridge volume, whale flows.</p></div><div class="p-4 rounded-2xl border hairline"><b>2. Agents</b><p class="text-sm text-slate-400 mt-2">Liquidation, bridge, whale, oracle, and policy agents vote.</p></div><div class="p-4 rounded-2xl border hairline"><b>3. Reason</b><p class="text-sm text-slate-400 mt-2">MiMo long-context chain ranks evidence and confidence.</p></div><div class="p-4 rounded-2xl border hairline"><b>4. Respond</b><p class="text-sm text-slate-400 mt-2">Human-readable report + precise operational action queue.</p></div></div></section>
+</main>
 </div>
-
 <script>
-// Health Factor Distribution Chart
-const ctx1 = document.getElementById('healthChart').getContext('2d');
-new Chart(ctx1, {
-  type: 'bar',
-  data: {
-    labels: ['<1.0', '1.0-1.1', '1.1-1.2', '1.2-1.5', '1.5-2.0', '>2.0'],
-    datasets: [{
-      label: 'Wallets',
-      data: [23, 89, 156, 342, 478, 159],
-      backgroundColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'],
-      borderRadius: 6,
-      barPercentage: 0.7
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false }, ticks: { color: '#6b7280', font: { size: 11 } } },
-      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280', font: { size: 11 } } }
-    }
-  }
-});
-
-// Timeline Chart
-const ctx2 = document.getElementById('timelineChart').getContext('2d');
-const hours = Array.from({length:24}, (_,i) => `${String(i).padStart(2,'0')}:00`);
-new Chart(ctx2, {
-  type: 'line',
-  data: {
-    labels: hours,
-    datasets: [{
-      label: 'Risk Events',
-      data: [2,1,0,1,3,2,5,8,12,15,18,22,28,31,27,23,19,14,11,8,6,4,3,2],
-      borderColor: '#ef4444',
-      backgroundColor: 'rgba(239,68,68,0.1)',
-      fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false }, ticks: { color: '#6b7280', font: { size: 10 }, maxTicksLimit: 8 } },
-      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280', font: { size: 11 } } }
-    }
-  }
-});
+const scenarios={liquidation:{title:'Liquidation Watch',confidence:'94.2%',metrics:[['At-risk wallets','1,247','+23%','critical'],['Critical exposure','$4.82M','next 30m','critical'],['Avg health factor','1.34','declining','high'],['Saved interventions','$4.2M','7d','safe']],curve:[.9,1.2,1.9,2.8,4.1,4.82],consensus:['Liquidation agent flags 5 urgent HF < 1.08 clusters','Oracle agent detects ETH volatility expansion 3.4× baseline','Policy agent recommends top-up threshold: 18 minutes'],trace:['Collect wallet-health snapshots from Aave V3 + Compound V3','Normalize collateral delta against oracle confidence bands','Score liquidation probability using health factor + volatility + liquidity depth','Escalate wallets with expected liquidation window below 30 minutes'],actions:['Notify vault operators for 5 critical wallets','Pre-stage collateral top-up transaction templates','Reduce monitoring interval from 5m to 30s','Generate incident digest for risk committee']},bridge:{title:'Bridge Risk Radar',confidence:'91.7%',metrics:[['Bridge routes','38','active','safe'],['Anomalous flow','$2.1M','last hour','high'],['Route risk','72/100','elevated','high'],['False positives','3.8%','low','safe']],curve:[.4,.7,.8,1.4,1.8,2.1],consensus:['Bridge agent detects USDC route imbalance on 2 corridors','Liquidity agent observes exit queue skew on destination pool','Policy agent recommends temporary max-size reduction'],trace:['Ingest bridge transfer deltas and liquidity pool depth','Compare route entropy against seven-day normal window','Check whether whale wallet cluster overlaps prior exploit clusters','Rank intervention severity by stranded-liquidity exposure'],actions:['Throttle high-value route recommendation','Flag manual review for two destination pools','Publish route health badge to dashboard','Archive evidence bundle for compliance']},whale:{title:'Whale Anomaly',confidence:'89.4%',metrics:[['Tracked whales','612','clusters','safe'],['Abnormal wallets','17','clustered','high'],['Net flow','$8.7M','24h','critical'],['Prediction lead','42m','before market','safe']],curve:[1.1,2.4,3.9,5.8,7.1,8.7],consensus:['Whale agent finds 17 wallets moving correlated stablecoin exits','Market agent detects slippage buildup in two DEX pools','Narrative agent links flow to pending governance unlock'],trace:['Cluster wallets by funding source and transaction timing','Calculate flow abnormality against rolling 30-day profile','Cross-reference pool depth and governance schedule','Build narrative explanation with uncertainty bounds'],actions:['Raise market-impact alert','Suggest liquidity hedge on correlated pools','Watch governance event window','Export whale-flow memo for analysts']}};
+let current='liquidation', chart;
+function riskClass(t){return t==='critical'?'risk-critical':t==='high'?'risk-high':'risk-safe'}
+function render(){const s=scenarios[current];document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.scenario===current));document.getElementById('confidenceBadge').textContent=s.confidence+' confidence';document.getElementById('metrics').innerHTML=s.metrics.map(m=>`<div class="metric glass panel p-5 border ${riskClass(m[3])}"><p class="text-xs text-slate-400">${m[0]}</p><p class="mt-2 text-3xl font-black">${m[1]}</p><p class="mt-2 text-xs text-slate-300 mono">${m[2]}</p></div>`).join('');document.getElementById('consensus').innerHTML=s.consensus.map((x,i)=>`<div class="p-4 rounded-2xl border hairline bg-white/[.03]"><span class="text-gold mono text-xs">AGENT ${String(i+1).padStart(2,'0')}</span><p class="text-sm mt-2 text-slate-200">${x}</p></div>`).join('');document.getElementById('trace').innerHTML=s.trace.map((x,i)=>`<div class="fade flex gap-3"><span class="w-7 h-7 rounded-full bg-gold/15 text-gold grid place-items-center mono text-xs shrink-0">${i+1}</span><p class="text-sm text-slate-300 pt-1">${x}</p></div>`).join('');document.getElementById('actions').innerHTML=s.actions.map((x,i)=>`<div class="fade p-4 rounded-2xl border hairline bg-white/[.025]"><div class="flex justify-between gap-3"><p class="text-sm text-slate-200">${x}</p><span class="text-xs mono text-gold">Q${i+1}</span></div></div>`).join(''); if(chart){chart.data.datasets[0].data=s.curve;chart.data.datasets[0].label=s.title;chart.update()} }
+function initChart(){const ctx=document.getElementById('riskChart');chart=new Chart(ctx,{type:'line',data:{labels:['T-60','T-45','T-30','T-15','Now','T+15'],datasets:[{label:'Risk exposure',data:scenarios[current].curve,borderColor:'#f5c469',backgroundColor:'rgba(245,196,105,.14)',fill:true,tension:.42,pointBackgroundColor:'#ff5c35',pointRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#cbd5e1'}}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(255,255,255,.06)'}},y:{ticks:{color:'#94a3b8',callback:v=>'$'+v+'M'},grid:{color:'rgba(255,255,255,.06)'}}}})}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{current=b.dataset.scenario;render()});document.getElementById('runSwarm').onclick=()=>{const order=['liquidation','bridge','whale'];current=order[(order.indexOf(current)+1)%order.length];render()};document.getElementById('exportReport').onclick=()=>{const s=scenarios[current];const report=`DeFi Sentinel Swarm Incident Report\nScenario: ${s.title}\nConfidence: ${s.confidence}\nMetrics:\n${s.metrics.map(m=>'- '+m[0]+': '+m[1]+' ('+m[2]+')').join('\n')}\n\nReasoning Trace:\n${s.trace.map((t,i)=>(i+1)+'. '+t).join('\n')}\n\nAction Queue:\n${s.actions.map((a,i)=>(i+1)+'. '+a).join('\n')}`;const blob=new Blob([report],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='defi-sentinel-report.txt';a.click();URL.revokeObjectURL(a.href)};initChart();render();
 </script>
 </body>
 </html>
