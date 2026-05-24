@@ -1,0 +1,9 @@
+[project]
+name = "agent-defi-sentinel"
+version = "1.0.0"
+description = "Autonomous multi-agent risk desk for liquidity shocks, oracle anomalies, bridge stress, and liquidation cascades."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

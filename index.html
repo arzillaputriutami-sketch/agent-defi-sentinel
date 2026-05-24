@@ -1,50 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DeFi Sentinel Swarm — Autonomous Risk Intelligence</title>
-<meta name="description" content="Premium multi-agent DeFi risk intelligence console with live scenario simulation, liquidation scoring, bridge anomaly analysis, and AI reasoning traces." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeFi Sentinel — Live Protocol Risk Analyzer</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-tailwind.config = { theme: { extend: { fontFamily: { sans:['Inter','sans-serif'], mono:['JetBrains Mono','monospace'] }, colors: { obsidian:'#05050b', gold:'#f5c469', ember:'#ff5c35', plasma:'#8b5cf6' } } } }
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,sans-serif;background:#05050b;color:#f8fafc;min-height:100vh;overflow-x:hidden}.lux-bg{background:radial-gradient(circle at 10% 15%,rgba(245,196,105,.14),transparent 34%),radial-gradient(circle at 82% 12%,rgba(139,92,246,.18),transparent 35%),radial-gradient(circle at 50% 90%,rgba(255,92,53,.10),transparent 38%),linear-gradient(135deg,#05050b,#090914 48%,#05050b)}.noise:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.04;background-image:url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E')}.glass{background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.12);box-shadow:0 22px 70px rgba(0,0,0,.38);backdrop-filter:blur(22px)}.panel{border-radius:28px}.hairline{border-color:rgba(255,255,255,.11)}.gold-text{background:linear-gradient(120deg,#fff7d6,#f5c469 45%,#ff8a50);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.orb{position:absolute;border-radius:999px;filter:blur(42px);opacity:.28;animation:float 9s ease-in-out infinite}.orb2{animation-delay:-3s}.orb3{animation-delay:-5s}@keyframes float{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(18px,-22px,0) scale(1.06)}}.status-dot{box-shadow:0 0 0 7px rgba(34,197,94,.12);animation:pulse 1.8s infinite}@keyframes pulse{50%{opacity:.45;box-shadow:0 0 0 12px rgba(34,197,94,.03)}}.mono{font-family:'JetBrains Mono',monospace}.tab.active{background:linear-gradient(135deg,rgba(245,196,105,.22),rgba(255,92,53,.14));border-color:rgba(245,196,105,.45);color:white}.risk-critical{background:linear-gradient(135deg,rgba(239,68,68,.22),rgba(127,29,29,.12));border-color:rgba(248,113,113,.35)}.risk-high{background:linear-gradient(135deg,rgba(245,158,11,.20),rgba(120,53,15,.12));border-color:rgba(251,191,36,.30)}.risk-safe{background:linear-gradient(135deg,rgba(16,185,129,.18),rgba(6,78,59,.10));border-color:rgba(52,211,153,.28)}.metric{transition:transform .25s,border-color .25s}.metric:hover{transform:translateY(-3px);border-color:rgba(245,196,105,.38)}.btn{transition:transform .2s,box-shadow .2s}.btn:hover{transform:translateY(-2px);box-shadow:0 18px 45px rgba(245,196,105,.14)}.fade{animation:fade .45s ease both}@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@media(max-width:900px){.app{grid-template-columns:1fr!important}.sidebar{position:relative!important;height:auto!important}.metrics{grid-template-columns:1fr 1fr!important}.charts{grid-template-columns:1fr!important}}
+  :root{--bg:#0a0a15;--panel:#111827;--border:#1e293b;--cyan:#22f7ff;--green:#10b981;--red:#ef4444;--yellow:#eab308;--text:#e2e8f0;--muted:#94a3b8}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px}
+  .glow{box-shadow:0 0 20px rgba(34,247,255,.08)}
+  .btn{padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;border:none;transition:.2s}
+  .btn-primary{background:var(--cyan);color:#0a0a15}
+  .btn-primary:hover{opacity:.85}
+  .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--cyan)}
+  input,select{background:#0f172a;border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;outline:none;width:100%;font-size:14px}
+  input:focus{border-color:var(--cyan)}
+  .badge{padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;text-transform:uppercase}
+  .badge-critical{background:#7f1d1d;color:#fca5a5}.badge-high{background:#78350f;color:#fcd34d}
+  .badge-medium{background:#713f12;color:#fde68a}.badge-low{background:#14532d;color:#86efac}
+  .spinner{border:3px solid var(--border);border-top-color:var(--cyan);border-radius:50%;width:28px;height:28px;animation:spin .6s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .fade-in{animation:fadeIn .3s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+  .chart-container{position:relative;height:280px}
 </style>
 </head>
-<body class="lux-bg noise">
-<div class="orb w-80 h-80 bg-gold left-[-120px] top-24"></div><div class="orb orb2 w-96 h-96 bg-plasma right-[-180px] top-10"></div><div class="orb orb3 w-72 h-72 bg-ember left-[45%] bottom-[-160px]"></div>
-<div class="app relative z-10 grid grid-cols-[300px_1fr] min-h-screen">
-<aside class="sidebar glass h-screen sticky top-0 p-7 border-r hairline">
-  <div class="flex items-center gap-3 mb-9"><div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-gold via-ember to-plasma grid place-items-center shadow-xl"><span class="font-black text-black">DS</span></div><div><h1 class="font-black tracking-tight">DeFi Sentinel</h1><p class="text-xs text-slate-400">Swarm Risk OS v2.4</p></div></div>
-  <div class="glass rounded-3xl p-4 mb-6"><div class="flex items-center gap-3"><span class="status-dot w-2.5 h-2.5 bg-emerald-400 rounded-full"></span><span class="text-sm font-semibold">12 agents online</span></div><p class="mt-2 text-xs text-slate-400">Monitoring Aave, Compound, Morpho, Spark, Synapse, Stargate.</p></div>
-  <nav class="space-y-2" id="scenarioTabs">
-    <button data-scenario="liquidation" class="tab active w-full text-left px-4 py-3 rounded-2xl border hairline text-sm text-slate-300">Liquidation Watch</button>
-    <button data-scenario="bridge" class="tab w-full text-left px-4 py-3 rounded-2xl border hairline text-sm text-slate-300">Bridge Risk Radar</button>
-    <button data-scenario="whale" class="tab w-full text-left px-4 py-3 rounded-2xl border hairline text-sm text-slate-300">Whale Anomaly</button>
-  </nav>
-  <div class="mt-8 pt-6 border-t hairline"><p class="text-[11px] uppercase tracking-[.28em] text-slate-500 mb-3">Model Stack</p><div class="space-y-2 text-xs"><div class="flex justify-between"><span>MiMo Reasoner</span><span class="text-gold">planner</span></div><div class="flex justify-between"><span>Claude Code</span><span class="text-gold">builder</span></div><div class="flex justify-between"><span>Hermes Agent</span><span class="text-gold">orchestrator</span></div></div></div>
-</aside>
-<main class="p-8 lg:p-10">
-  <section class="glass panel p-8 mb-7 overflow-hidden relative"><div class="absolute right-8 top-8 px-3 py-1 rounded-full bg-emerald-400/10 border border-emerald-300/20 text-emerald-300 text-xs mono">LIVE SIMULATION</div><p class="text-xs uppercase tracking-[.32em] text-gold mb-4">Autonomous DeFi Risk Intelligence</p><h2 class="text-4xl lg:text-6xl font-black leading-tight max-w-4xl">Premium multi-agent console for <span class="gold-text">liquidation prevention</span> and protocol risk response.</h2><p class="mt-5 text-slate-300 max-w-3xl leading-7">This demo is not a placeholder landing page: it contains a deterministic risk scoring engine, scenario state machine, agent reasoning trace, charted exposure model, and downloadable incident report generator for reviewer proof.</p><div class="mt-7 flex flex-wrap gap-3"><button id="runSwarm" class="btn px-5 py-3 rounded-2xl bg-gradient-to-r from-gold to-ember text-black font-bold">Run Swarm Analysis</button><button id="exportReport" class="btn px-5 py-3 rounded-2xl glass font-semibold">Export Incident Report</button><a href="#architecture" class="px-5 py-3 rounded-2xl border hairline text-slate-300 font-semibold">View Architecture</a></div></section>
-  <section class="metrics grid grid-cols-4 gap-4 mb-7" id="metrics"></section>
-  <section class="charts grid grid-cols-[1.15fr_.85fr] gap-5 mb-7"><div class="glass panel p-6"><div class="flex justify-between items-start mb-5"><div><h3 class="font-bold text-lg">Risk Exposure Curve</h3><p class="text-sm text-slate-400">Projected exposure by agent consensus.</p></div><span id="confidenceBadge" class="px-3 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs mono">94.2% confidence</span></div><div class="h-[290px]"><canvas id="riskChart"></canvas></div></div><div class="glass panel p-6"><h3 class="font-bold text-lg mb-4">Agent Consensus</h3><div id="consensus" class="space-y-3"></div></div></section>
-  <section class="grid grid-cols-1 xl:grid-cols-2 gap-5 mb-7"><div class="glass panel p-6"><h3 class="font-bold text-lg mb-4">AI Reasoning Trace</h3><div id="trace" class="space-y-3"></div></div><div class="glass panel p-6"><h3 class="font-bold text-lg mb-4">Action Queue</h3><div id="actions" class="space-y-3"></div></div></section>
-  <section id="architecture" class="glass panel p-7"><p class="text-xs uppercase tracking-[.28em] text-gold mb-3">Architecture</p><div class="grid lg:grid-cols-4 gap-4"><div class="p-4 rounded-2xl border hairline"><b>1. Ingest</b><p class="text-sm text-slate-400 mt-2">Protocol positions, oracle deltas, bridge volume, whale flows.</p></div><div class="p-4 rounded-2xl border hairline"><b>2. Agents</b><p class="text-sm text-slate-400 mt-2">Liquidation, bridge, whale, oracle, and policy agents vote.</p></div><div class="p-4 rounded-2xl border hairline"><b>3. Reason</b><p class="text-sm text-slate-400 mt-2">MiMo long-context chain ranks evidence and confidence.</p></div><div class="p-4 rounded-2xl border hairline"><b>4. Respond</b><p class="text-sm text-slate-400 mt-2">Human-readable report + precise operational action queue.</p></div></div></section>
-</main>
+<body>
+<div id="app" class="flex flex-col lg:flex-row min-h-screen">
+  <!-- Sidebar -->
+  <aside class="w-full lg:w-80 lg:min-h-screen p-4 border-b lg:border-b-0 lg:border-r" style="border-color:var(--border);background:#0d1117">
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--cyan);color:#0a0a15;font-weight:800">DS</div>
+      <div><h1 class="text-lg font-bold" style="color:var(--cyan)">DeFi Sentinel</h1><p class="text-xs" style="color:var(--muted)">Live Protocol Risk Analyzer</p></div>
+    </div>
+    <div class="mb-4">
+      <div class="relative">
+        <input id="searchInput" placeholder="Search protocol (e.g. aave, lido)..." autocomplete="off">
+        <button onclick="searchProtocol()" class="btn btn-primary absolute right-1 top-1" style="padding:7px 14px">Scan</button>
+      </div>
+      <div id="suggestions" class="hidden panel mt-1 max-h-48 overflow-auto" style="position:absolute;z-index:50;width:calc(100%-2rem)"></div>
+    </div>
+    <div id="recentSearches" class="mb-4"></div>
+    <div id="quickProtocols" class="mb-4">
+      <p class="text-xs font-semibold mb-2" style="color:var(--muted)">TOP PROTOCOLS</p>
+      <div id="topList" class="space-y-1"></div>
+    </div>
+    <div class="text-xs mt-auto pt-4" style="color:var(--muted)">
+      <p>Data: DeFiLlama API • Live</p>
+      <p id="protoCount" class="mt-1"></p>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 p-4 lg:p-6 overflow-auto">
+    <!-- Welcome State -->
+    <div id="welcome" class="flex flex-col items-center justify-center min-h-[60vh] text-center">
+      <div class="text-6xl mb-4">🛡️</div>
+      <h2 class="text-2xl font-bold mb-2">Search a DeFi Protocol</h2>
+      <p class="text-sm max-w-md" style="color:var(--muted)">Enter any protocol name to analyze TVL, chain distribution, risk factors, and yield data — all from live on-chain sources.</p>
+      <div class="flex flex-wrap gap-2 mt-6 justify-center">
+        <button onclick="loadProtocol('aave')" class="btn btn-ghost text-sm">Aave</button>
+        <button onclick="loadProtocol('lido')" class="btn btn-ghost text-sm">Lido</button>
+        <button onclick="loadProtocol('uniswap')" class="btn btn-ghost text-sm">Uniswap</button>
+        <button onclick="loadProtocol('makerdao')" class="btn btn-ghost text-sm">MakerDAO</button>
+        <button onclick="loadProtocol('curve-dex')" class="btn btn-ghost text-sm">Curve</button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="hidden flex flex-col items-center justify-center min-h-[60vh]">
+      <div class="spinner mb-4"></div>
+      <p id="loadingText" class="text-sm" style="color:var(--muted)">Fetching protocol data...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="hidden panel p-6 text-center max-w-lg mx-auto mt-20 glow">
+      <div class="text-4xl mb-3">⚠️</div>
+      <h3 class="text-lg font-bold mb-2">Protocol Not Found</h3>
+      <p id="errorMsg" class="text-sm" style="color:var(--muted)"></p>
+      <button onclick="showWelcome()" class="btn btn-ghost mt-4">Back to Search</button>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="hidden fade-in">
+      <!-- Header -->
+      <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+        <div>
+          <div class="flex items-center gap-3">
+            <h2 id="protoName" class="text-2xl font-bold"></h2>
+            <span id="protoCategory" class="badge" style="background:#1e293b;color:var(--cyan)"></span>
+          </div>
+          <p id="protoDesc" class="text-sm mt-1 max-w-xl" style="color:var(--muted)"></p>
+          <div class="flex items-center gap-3 mt-2">
+            <a id="protoUrl" href="#" target="_blank" class="text-xs" style="color:var(--cyan)">🔗 Website</a>
+            <span id="protoChains" class="text-xs" style="color:var(--muted)"></span>
+          </div>
+        </div>
+        <div class="panel p-4 glow text-center min-w-[140px]">
+          <p class="text-xs mb-1" style="color:var(--muted)">RISK SCORE</p>
+          <p id="riskScore" class="text-4xl font-bold mono"></p>
+          <p id="riskLabel" class="text-xs font-semibold mt-1"></p>
+        </div>
+      </div>
+
+      <!-- Metrics Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <div class="panel p-4">
+          <p class="text-xs" style="color:var(--muted)">TOTAL TVL</p>
+          <p id="tvl" class="text-xl font-bold mono mt-1"></p>
+        </div>
+        <div class="panel p-4">
+          <p class="text-xs" style="color:var(--muted)">24H CHANGE</p>
+          <p id="change1d" class="text-xl font-bold mono mt-1"></p>
+        </div>
+        <div class="panel p-4">
+          <p class="text-xs" style="color:var(--muted)">7D CHANGE</p>
+          <p id="change7d" class="text-xl font-bold mono mt-1"></p>
+        </div>
+        <div class="panel p-4">
+          <p class="text-xs" style="color:var(--muted)">30D CHANGE</p>
+          <p id="change30d" class="text-xl font-bold mono mt-1"></p>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div class="panel p-4">
+          <h3 class="font-semibold mb-3">TVL History</h3>
+          <div class="chart-container"><canvas id="tvlChart"></canvas></div>
+        </div>
+        <div class="panel p-4">
+          <h3 class="font-semibold mb-3">Chain Distribution</h3>
+          <div class="chart-container"><canvas id="chainChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Risk Breakdown -->
+      <div class="panel p-5 mb-6">
+        <h3 class="font-semibold mb-4">Risk Analysis Breakdown</h3>
+        <div id="riskFactors" class="space-y-3"></div>
+      </div>
+
+      <!-- Yield Opportunities -->
+      <div id="yieldSection" class="panel p-5 mb-6 hidden">
+        <h3 class="font-semibold mb-4">Yield Opportunities</h3>
+        <div id="yieldTable" class="overflow-auto"></div>
+      </div>
+    </div>
+  </main>
 </div>
+
 <script>
-const scenarios={liquidation:{title:'Liquidation Watch',confidence:'94.2%',metrics:[['At-risk wallets','1,247','+23%','critical'],['Critical exposure','$4.82M','next 30m','critical'],['Avg health factor','1.34','declining','high'],['Saved interventions','$4.2M','7d','safe']],curve:[.9,1.2,1.9,2.8,4.1,4.82],consensus:['Liquidation agent flags 5 urgent HF < 1.08 clusters','Oracle agent detects ETH volatility expansion 3.4× baseline','Policy agent recommends top-up threshold: 18 minutes'],trace:['Collect wallet-health snapshots from Aave V3 + Compound V3','Normalize collateral delta against oracle confidence bands','Score liquidation probability using health factor + volatility + liquidity depth','Escalate wallets with expected liquidation window below 30 minutes'],actions:['Notify vault operators for 5 critical wallets','Pre-stage collateral top-up transaction templates','Reduce monitoring interval from 5m to 30s','Generate incident digest for risk committee']},bridge:{title:'Bridge Risk Radar',confidence:'91.7%',metrics:[['Bridge routes','38','active','safe'],['Anomalous flow','$2.1M','last hour','high'],['Route risk','72/100','elevated','high'],['False positives','3.8%','low','safe']],curve:[.4,.7,.8,1.4,1.8,2.1],consensus:['Bridge agent detects USDC route imbalance on 2 corridors','Liquidity agent observes exit queue skew on destination pool','Policy agent recommends temporary max-size reduction'],trace:['Ingest bridge transfer deltas and liquidity pool depth','Compare route entropy against seven-day normal window','Check whether whale wallet cluster overlaps prior exploit clusters','Rank intervention severity by stranded-liquidity exposure'],actions:['Throttle high-value route recommendation','Flag manual review for two destination pools','Publish route health badge to dashboard','Archive evidence bundle for compliance']},whale:{title:'Whale Anomaly',confidence:'89.4%',metrics:[['Tracked whales','612','clusters','safe'],['Abnormal wallets','17','clustered','high'],['Net flow','$8.7M','24h','critical'],['Prediction lead','42m','before market','safe']],curve:[1.1,2.4,3.9,5.8,7.1,8.7],consensus:['Whale agent finds 17 wallets moving correlated stablecoin exits','Market agent detects slippage buildup in two DEX pools','Narrative agent links flow to pending governance unlock'],trace:['Cluster wallets by funding source and transaction timing','Calculate flow abnormality against rolling 30-day profile','Cross-reference pool depth and governance schedule','Build narrative explanation with uncertainty bounds'],actions:['Raise market-impact alert','Suggest liquidity hedge on correlated pools','Watch governance event window','Export whale-flow memo for analysts']}};
-let current='liquidation', chart;
-function riskClass(t){return t==='critical'?'risk-critical':t==='high'?'risk-high':'risk-safe'}
-function render(){const s=scenarios[current];document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.scenario===current));document.getElementById('confidenceBadge').textContent=s.confidence+' confidence';document.getElementById('metrics').innerHTML=s.metrics.map(m=>`<div class="metric glass panel p-5 border ${riskClass(m[3])}"><p class="text-xs text-slate-400">${m[0]}</p><p class="mt-2 text-3xl font-black">${m[1]}</p><p class="mt-2 text-xs text-slate-300 mono">${m[2]}</p></div>`).join('');document.getElementById('consensus').innerHTML=s.consensus.map((x,i)=>`<div class="p-4 rounded-2xl border hairline bg-white/[.03]"><span class="text-gold mono text-xs">AGENT ${String(i+1).padStart(2,'0')}</span><p class="text-sm mt-2 text-slate-200">${x}</p></div>`).join('');document.getElementById('trace').innerHTML=s.trace.map((x,i)=>`<div class="fade flex gap-3"><span class="w-7 h-7 rounded-full bg-gold/15 text-gold grid place-items-center mono text-xs shrink-0">${i+1}</span><p class="text-sm text-slate-300 pt-1">${x}</p></div>`).join('');document.getElementById('actions').innerHTML=s.actions.map((x,i)=>`<div class="fade p-4 rounded-2xl border hairline bg-white/[.025]"><div class="flex justify-between gap-3"><p class="text-sm text-slate-200">${x}</p><span class="text-xs mono text-gold">Q${i+1}</span></div></div>`).join(''); if(chart){chart.data.datasets[0].data=s.curve;chart.data.datasets[0].label=s.title;chart.update()} }
-function initChart(){const ctx=document.getElementById('riskChart');chart=new Chart(ctx,{type:'line',data:{labels:['T-60','T-45','T-30','T-15','Now','T+15'],datasets:[{label:'Risk exposure',data:scenarios[current].curve,borderColor:'#f5c469',backgroundColor:'rgba(245,196,105,.14)',fill:true,tension:.42,pointBackgroundColor:'#ff5c35',pointRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#cbd5e1'}}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(255,255,255,.06)'}},y:{ticks:{color:'#94a3b8',callback:v=>'$'+v+'M'},grid:{color:'rgba(255,255,255,.06)'}}}})}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{current=b.dataset.scenario;render()});document.getElementById('runSwarm').onclick=()=>{const order=['liquidation','bridge','whale'];current=order[(order.indexOf(current)+1)%order.length];render()};document.getElementById('exportReport').onclick=()=>{const s=scenarios[current];const report=`DeFi Sentinel Swarm Incident Report\nScenario: ${s.title}\nConfidence: ${s.confidence}\nMetrics:\n${s.metrics.map(m=>'- '+m[0]+': '+m[1]+' ('+m[2]+')').join('\n')}\n\nReasoning Trace:\n${s.trace.map((t,i)=>(i+1)+'. '+t).join('\n')}\n\nAction Queue:\n${s.actions.map((a,i)=>(i+1)+'. '+a).join('\n')}`;const blob=new Blob([report],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='defi-sentinel-report.txt';a.click();URL.revokeObjectURL(a.href)};initChart();render();
+let allProtocols = [];
+let charts = {};
+const RECENT_KEY = 'defi-sentinel-recent';
+const $ = id => document.getElementById(id);
+
+// --- API ---
+async function fetchProtocols() {
+  try {
+    const r = await fetch('https://api.llama.fi/protocols');
+    allProtocols = await r.json();
+    $('protoCount').textContent = allProtocols.length + ' protocols indexed';
+    renderTop();
+    renderRecent();
+  } catch(e) { $('protoCount').textContent = 'API unavailable'; }
+}
+
+async function fetchProtocol(slug) {
+  const r = await fetch('https://api.llama.fi/protocol/' + slug);
+  if (!r.ok) throw new Error('Protocol not found');
+  return r.json();
+}
+
+async function fetchYields(slug) {
+  try {
+    const r = await fetch('https://yields.llama.fi/pools');
+    const data = await r.json();
+    return (data.data || []).filter(p => p.project === slug).slice(0, 10);
+  } catch { return []; }
+}
+
+// --- Search ---
+let searchTimeout;
+$('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimeout);
+  const q = e.target.value.trim().toLowerCase();
+  if (q.length < 2) { $('suggestions').classList.add('hidden'); return; }
+  searchTimeout = setTimeout(() => {
+    const matches = allProtocols.filter(p => p.name.toLowerCase().includes(q)).slice(0, 8);
+    if (!matches.length) { $('suggestions').classList.add('hidden'); return; }
+    $('suggestions').innerHTML = matches.map(p => 
+      `<button onclick="loadProtocol('${p.slug}')" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded text-sm flex justify-between">
+        <span>${p.name}</span><span class="mono text-xs" style="color:var(--muted)">${formatUSD(p.tvl)}</span>
+      </button>`
+    ).join('');
+    $('suggestions').classList.remove('hidden');
+  }, 200);
+});
+
+$('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { searchProtocol(); $('suggestions').classList.add('hidden'); }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#searchInput') && !e.target.closest('#suggestions')) $('suggestions').classList.add('hidden');
+});
+
+function searchProtocol() {
+  const q = $('searchInput').value.trim().toLowerCase();
+  if (!q) return;
+  const match = allProtocols.find(p => p.name.toLowerCase() === q || p.slug.toLowerCase() === q);
+  if (match) loadProtocol(match.slug);
+  else {
+    const partial = allProtocols.find(p => p.name.toLowerCase().includes(q) || p.slug.includes(q));
+    if (partial) loadProtocol(partial.slug);
+    else showError('No protocol matching "' + q + '" found. Try a different name.');
+  }
+}
+
+function addRecent(slug, name) {
+  let recent = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+  recent = recent.filter(r => r.slug !== slug);
+  recent.unshift({ slug, name });
+  if (recent.length > 8) recent.pop();
+  localStorage.setItem(RECENT_KEY, JSON.stringify(recent));
+  renderRecent();
+}
+
+// --- Load & Display ---
+async function loadProtocol(slug) {
+  $('welcome').classList.add('hidden');
+  $('errorState').classList.add('hidden');
+  $('results').classList.add('hidden');
+  $('loading').classList.remove('hidden');
+  $('suggestions').classList.add('hidden');
+  
+  try {
+    $('loadingText').textContent = 'Fetching ' + slug + ' data from DeFiLlama...';
+    const [data, yields] = await Promise.all([fetchProtocol(slug), fetchYields(slug)]);
+    
+    addRecent(slug, data.name);
+    displayResults(data, yields);
+  } catch(e) {
+    showError(e.message || 'Failed to fetch protocol data');
+  }
+}
+
+function displayResults(data, yields) {
+  $('loading').classList.add('hidden');
+  $('results').classList.remove('hidden');
+  
+  // Header
+  $('protoName').textContent = data.name;
+  $('protoCategory').textContent = data.category || 'DeFi';
+  $('protoDesc').textContent = data.description || 'Decentralized finance protocol';
+  if (data.url) { $('protoUrl').href = data.url; $('protoUrl').textContent = '🔗 ' + data.url; }
+  $('protoChains').textContent = (data.chains || []).join(', ');
+  
+  // Metrics
+  $('tvl').textContent = formatUSD(data.tvl);
+  setChange('change1d', data.change_1d);
+  setChange('change7d', data.change_7d);
+  setChange('change30d', data.change_30d);
+  
+  // Risk
+  const risk = calcRisk(data);
+  $('riskScore').textContent = risk.score;
+  $('riskScore').style.color = risk.color;
+  $('riskLabel').textContent = risk.label;
+  $('riskLabel').style.color = risk.color;
+  renderRiskFactors(risk.factors);
+  
+  // Charts
+  renderTVLChart(data);
+  renderChainChart(data);
+  
+  // Yields
+  if (yields.length) {
+    $('yieldSection').classList.remove('hidden');
+    renderYields(yields);
+  } else {
+    $('yieldSection').classList.add('hidden');
+  }
+}
+
+// --- Risk Calculation ---
+function calcRisk(data) {
+  let score = 50;
+  const factors = [];
+  
+  // Chain concentration
+  const chainCount = (data.chains || []).length;
+  if (chainCount === 1) { score += 15; factors.push({ name: 'Chain Concentration', severity: 'high', desc: 'Single chain dependency — no cross-chain diversification', score: 75 }); }
+  else if (chainCount <= 3) { score += 5; factors.push({ name: 'Chain Concentration', severity: 'medium', desc: 'Deployed on ' + chainCount + ' chains — moderate diversification', score: 45 }); }
+  else { score -= 10; factors.push({ name: 'Chain Concentration', severity: 'low', desc: 'Deployed on ' + chainCount + ' chains — well diversified', score: 20 }); }
+  
+  // TVL trend
+  const change30 = data.change_30d || 0;
+  if (change30 < -30) { score += 20; factors.push({ name: 'TVL Trend (30d)', severity: 'critical', desc: 'TVL dropped ' + change30.toFixed(1) + '% in 30 days — significant capital flight', score: 90 }); }
+  else if (change30 < -10) { score += 10; factors.push({ name: 'TVL Trend (30d)', severity: 'high', desc: 'TVL dropped ' + change30.toFixed(1) + '% in 30 days', score: 65 }); }
+  else if (change30 < 0) { score += 3; factors.push({ name: 'TVL Trend (30d)', severity: 'medium', desc: 'TVL slightly down ' + change30.toFixed(1) + '% in 30 days', score: 35 }); }
+  else { score -= 5; factors.push({ name: 'TVL Trend (30d)', severity: 'low', desc: 'TVL up ' + change30.toFixed(1) + '% in 30 days — healthy growth', score: 15 }); }
+  
+  // TVL size
+  const tvl = data.tvl || 0;
+  if (tvl < 1e6) { score += 15; factors.push({ name: 'TVL Size', severity: 'high', desc: 'Small TVL (' + formatUSD(tvl) + ') — higher risk of manipulation', score: 70 }); }
+  else if (tvl < 100e6) { score += 5; factors.push({ name: 'TVL Size', severity: 'medium', desc: 'Medium TVL (' + formatUSD(tvl) + ') — moderate institutional trust', score: 40 }); }
+  else { score -= 10; factors.push({ name: 'TVL Size', severity: 'low', desc: 'Large TVL (' + formatUSD(tvl) + ') — strong institutional trust', score: 15 }); }
+  
+  // Mcap/TVL ratio
+  const mcapTvl = data.mcap && data.tvl ? data.mcap / data.tvl : null;
+  if (mcapTvl !== null) {
+    if (mcapTvl > 5) { score += 10; factors.push({ name: 'MCap/TVL Ratio', severity: 'high', desc: 'Ratio ' + mcapTvl.toFixed(1) + 'x — token may be overvalued relative to TVL', score: 70 }); }
+    else if (mcapTvl > 2) { score += 3; factors.push({ name: 'MCap/TVL Ratio', severity: 'medium', desc: 'Ratio ' + mcapTvl.toFixed(1) + 'x — moderate valuation', score: 40 }); }
+    else { score -= 5; factors.push({ name: 'MCap/TVL Ratio', severity: 'low', desc: 'Ratio ' + mcapTvl.toFixed(1) + 'x — healthy valuation', score: 20 }); }
+  }
+  
+  score = Math.max(0, Math.min(100, score));
+  let label, color;
+  if (score >= 75) { label = 'HIGH RISK'; color = 'var(--red)'; }
+  else if (score >= 50) { label = 'MEDIUM RISK'; color = 'var(--yellow)'; }
+  else { label = 'LOW RISK'; color = 'var(--green)'; }
+  
+  return { score, label, color, factors };
+}
+
+// --- Charts ---
+function renderTVLChart(data) {
+  const canvas = $('tvlChart');
+  if (charts.tvl) charts.tvl.destroy();
+  const tvlData = data.chainTvls ? Object.entries(data.chainTvls).filter(([k]) => !k.includes('-')).map(([k,v]) => ({ chain: k, tvl: typeof v === 'number' ? v : 0 })).sort((a,b) => b.tvl - a.tvl).slice(0, 10) : [];
+  
+  // Use historical data if available
+  const historicalPoints = [];
+  if (data.tvl && data.tvl.length) {
+    const points = data.tvl.slice(-90);
+    points.forEach(p => historicalPoints.push({ x: new Date(p.date * 1000), y: p.totalLiquidityUSD }));
+  }
+  
+  if (historicalPoints.length > 1) {
+    charts.tvl = new Chart(canvas, {
+      type: 'line',
+      data: { datasets: [{ data: historicalPoints, borderColor: '#22f7ff', backgroundColor: 'rgba(34,247,255,.08)', fill: true, tension: .3, pointRadius: 0, borderWidth: 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { type: 'time', grid: { color: '#1e293b' }, ticks: { color: '#64748b', font: { size: 10 } } }, y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b', callback: v => formatUSD(v) } } } }
+    });
+  } else {
+    canvas.parentElement.innerHTML = '<p class="text-sm text-center py-8" style="color:var(--muted)">No historical TVL data available</p>';
+  }
+}
+
+function renderChainChart(data) {
+  const canvas = $('chainChart');
+  if (charts.chain) charts.chain.destroy();
+  const chainData = data.chainTvls ? Object.entries(data.chainTvls).filter(([k]) => !k.includes('-')).map(([k,v]) => ({ chain: k, tvl: typeof v === 'number' ? v : 0 })).sort((a,b) => b.tvl - a.tvl).slice(0, 8) : [];
+  
+  if (!chainData.length) { canvas.parentElement.innerHTML = '<p class="text-sm text-center py-8" style="color:var(--muted)">No chain distribution data</p>'; return; }
+  
+  const colors = ['#22f7ff','#10b981','#8b5cf6','#f59e0b','#ef4444','#ec4899','#06b6d4','#84cc16'];
+  charts.chain = new Chart(canvas, {
+    type: 'doughnut',
+    data: { labels: chainData.map(c => c.chain), datasets: [{ data: chainData.map(c => c.tvl), backgroundColor: colors, borderColor: '#111827', borderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 11 }, padding: 12 } } } }
+  });
+}
+
+function renderRiskFactors(factors) {
+  $('riskFactors').innerHTML = factors.map(f => `
+    <div class="flex items-start gap-3 p-3 rounded-lg" style="background:#0f172a">
+      <span class="badge badge-${f.severity}">${f.severity}</span>
+      <div class="flex-1">
+        <p class="font-semibold text-sm">${f.name}</p>
+        <p class="text-xs mt-0.5" style="color:var(--muted)">${f.desc}</p>
+      </div>
+      <div class="mono text-sm font-bold" style="color:${f.severity==='critical'||f.severity==='high'?'var(--red)':f.severity==='medium'?'var(--yellow)':'var(--green)'}">${f.score}/100</div>
+    </div>
+  `).join('');
+}
+
+function renderYields(yields) {
+  $('yieldTable').innerHTML = `<table class="w-full text-sm">
+    <thead><tr class="text-left" style="color:var(--muted)"><th class="pb-2">Pool</th><th class="pb-2">Chain</th><th class="pb-2">APY</th><th class="pb-2">TVL</th></tr></thead>
+    <tbody>${yields.map(y => `<tr class="border-t" style="border-color:var(--border)">
+      <td class="py-2">${y.symbol || y.pool}</td><td>${y.chain}</td>
+      <td class="mono" style="color:var(--green)">${(y.apy||0).toFixed(2)}%</td>
+      <td class="mono">${formatUSD(y.tvlUsd)}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+
+// --- UI Helpers ---
+function showWelcome() { $('welcome').classList.remove('hidden'); $('results').classList.add('hidden'); $('errorState').classList.add('hidden'); $('loading').classList.add('hidden'); }
+function showError(msg) { $('loading').classList.add('hidden'); $('errorState').classList.remove('hidden'); $('results').classList.add('hidden'); $('welcome').classList.add('hidden'); $('errorMsg').textContent = msg; }
+function formatUSD(v) { if (!v && v !== 0) return '—'; if (v >= 1e9) return '$' + (v/1e9).toFixed(2) + 'B'; if (v >= 1e6) return '$' + (v/1e6).toFixed(2) + 'M'; if (v >= 1e3) return '$' + (v/1e3).toFixed(1) + 'K'; return '$' + v.toFixed(2); }
+function setChange(id, val) { const el = $(id); if (!val && val !== 0) { el.textContent = '—'; return; } el.textContent = (val >= 0 ? '+' : '') + val.toFixed(2) + '%'; el.style.color = val >= 0 ? 'var(--green)' : 'var(--red)'; }
+function renderRecent() { const recent = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); $('recentSearches').innerHTML = recent.length ? '<p class="text-xs font-semibold mb-2" style="color:var(--muted)">RECENT</p>' + recent.map(r => `<button onclick="loadProtocol('${r.slug}')" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded text-sm">${r.name}</button>`).join('') : ''; }
+function renderTop() { const top = allProtocols.sort((a,b) => b.tvl - a.tvl).slice(0, 6); $('topList').innerHTML = top.map(p => `<button onclick="loadProtocol('${p.slug}')" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded text-sm flex justify-between"><span>${p.name}</span><span class="mono text-xs" style="color:var(--muted)">${formatUSD(p.tvl)}</span></button>`).join(''); }
+
+// --- Init ---
+fetchProtocols();
 </script>
 </body>
 </html>

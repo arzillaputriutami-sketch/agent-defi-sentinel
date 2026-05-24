@@ -1,41 +1,102 @@
-# DeFi Sentinel Swarm
+<p align="center">
+  <img src="https://img.shields.io/badge/product-agentic%20intelligence-7c3aed?style=for-the-badge" alt="Product">
+  <img src="https://img.shields.io/badge/python-3.10%2B-2563eb?style=for-the-badge" alt="Python">
+  <img src="https://img.shields.io/badge/license-MIT-16a34a?style=for-the-badge" alt="License">
+</p>
 
-Premium autonomous DeFi risk intelligence console built for the Xiaomi MiMo 100T Creator Incentive submission.
+<h1 align="center">DeFi Sentinel Swarm</h1>
+<p align="center"><b>Autonomous multi-agent risk desk for liquidity shocks, oracle anomalies, bridge stress, and liquidation cascades.</b></p>
 
-## What it does
+<p align="center">
+  <a href="#-what-this-is">What this is</a> •
+  <a href="#-product-surface">Product surface</a> •
+  <a href="#-quick-start">Quick start</a> •
+  <a href="#-architecture">Architecture</a>
+</p>
 
-DeFi Sentinel Swarm simulates a production risk desk where specialized AI agents monitor liquidation pressure, bridge anomalies, and whale flows. The demo includes:
+---
 
-- Interactive scenario switching: liquidation watch, bridge radar, whale anomaly.
-- Deterministic risk scoring panels and exposure curve.
-- Agent consensus cards showing multi-agent collaboration.
-- Long-chain reasoning trace per scenario.
-- Action queue for operational response.
-- Downloadable incident report generator for reviewer proof.
+## 🎯 What this is
 
-## Why this is a real project, not a static placeholder
+DeFi Sentinel Swarm is a real repository product, not just a landing page. It includes a deterministic multi-agent reasoning core, an optional FastAPI API boundary, CLI demo runner, tests, CI, architecture docs, sample scenarios, and the existing Vercel-ready dashboard.
 
-The page contains a browser-side state machine and scenario-specific analysis model. Each scenario changes metrics, chart data, reasoning trace, consensus outputs, and recommended actions. Reviewers can interact with it and export a report from the generated state.
+**Primary users:** protocol risk teams and treasury operators.
 
-## AI workflow
+## 💼 Product surface
 
-1. Ingest synthetic protocol signals: wallet health factor, bridge route depth, whale flow clusters.
-2. Route evidence to specialized agents.
-3. Rank evidence through a long-chain reasoning trace.
-4. Produce consensus and an operational action queue.
-5. Export a plain-text incident report.
+- **Reasoning core:** `backend/swarm.py` models specialist agents, confidence, trace IDs, risk scoring, and action plans.
+- **API boundary:** `backend/app.py` exposes `/health`, `/scenarios`, `/analyze`, and `/demo-report`.
+- **CLI console:** `python cli.py --all` generates operator-grade reports without external API keys.
+- **Demo dashboard:** `index.html` remains deployable as a static product surface.
+- **Quality gates:** `tests/test_swarm.py` plus `.github/workflows/ci.yml` keep the product verifiable.
 
-## Tech stack
+## 🧠 Agent team
 
-- Static HTML/CSS/JavaScript for zero-backend deployment.
-- Tailwind CDN for fast premium UI iteration.
-- Chart.js for risk curve visualization.
-- GitHub Pages for public proof deployment.
+- **Liquidity Sentinel**
+- **Oracle Divergence Analyst**
+- **Bridge Exposure Mapper**
+- **Liquidation Cascade Forecaster**
+- **Treasury Action Planner**
 
-## Live demo
+## 🚀 Quick start
 
-https://arzillaputriutami-sketch.github.io/agent-defi-sentinel/
+```bash
+git clone https://github.com/<owner>/agent-defi-sentinel.git
+cd agent-defi-sentinel
+python3 cli.py --all
+```
 
-## Submission positioning
+Optional API mode:
 
-This project is suitable for MiMo 100T because it shows reviewer-visible model use cases: multi-agent reasoning, risk triage, chain-of-thought style operational traces, and real-world DeFi safety workflows.
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+uvicorn backend.app:app --reload
+```
+
+## 🧪 Test
+
+```bash
+python3 -m pytest -q
+python3 backend/swarm.py | python3 -m json.tool >/dev/null
+```
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+  A[Signals] --> B[Specialist agents]
+  B --> C[Verifier]
+  C --> D[Risk score]
+  D --> E[Operator action plan]
+  E --> F[Dashboard / API / CLI]
+```
+
+## 📁 Repository map
+
+```text
+backend/swarm.py          Multi-agent reasoning engine
+backend/app.py            Optional FastAPI service boundary
+cli.py                    Local operator console
+tests/test_swarm.py       CI-friendly product tests
+examples/sample_scenario.json  Demo input payload
+docs/ARCHITECTURE.md      Reasoning-loop architecture
+docs/PRODUCT_SPEC.md      Product requirements and roadmap
+index.html                Static live dashboard
+```
+
+## 🗺️ Roadmap
+
+- [x] Static dashboard proof
+- [x] Multi-agent reasoning core
+- [x] CLI demo flow
+- [x] API boundary
+- [x] CI tests
+- [ ] Real-time connector adapters
+- [ ] Hosted report export
+- [ ] Human approval workflow
+
+## 📄 License
+
+MIT.

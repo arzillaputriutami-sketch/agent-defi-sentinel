@@ -1,0 +1,10 @@
+{
+  "scenario": "stablecoin depeg pressure",
+  "signals": {
+    "pool_depth_change": 50,
+    "oracle_spread_bps": 57,
+    "bridge_outflow_usd": 64,
+    "liquidation_queue_usd": 71,
+    "governance_delay_hours": 78
+  }
+}
