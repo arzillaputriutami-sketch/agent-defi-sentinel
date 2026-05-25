@@ -14,18 +14,35 @@ Autonomous multi-agent risk desk for liquidity shocks, oracle anomalies, bridge 
 
 ## Components
 
-- `backend/swarm.py` — pure Python reasoning core, safe for CI and static demos.
-- `backend/app.py` — FastAPI wrapper for product integration.
-- `cli.py` — terminal demo path for reviewers.
-- `index.html` — front-facing dashboard surface.
+- `backend/swarm.py` — pure Python reasoning core, safe for CI and local demos.
+- `backend/app.py` — FastAPI wrapper for hosted product integration.
+- `cli.py` — terminal demo path with JSON and Markdown output.
+- `index.html` — front-facing DeFi dashboard using live DeFiLlama data.
+- `examples/operator_override.json` — high-stress scenario fixture.
+- `tests/` — runtime, CLI, and API contract coverage.
 
 ## Agent responsibilities
 
-- `Liquidity Sentinel`: owns one part of the analysis loop.
-- `Oracle Divergence Analyst`: owns one part of the analysis loop.
-- `Bridge Exposure Mapper`: owns one part of the analysis loop.
-- `Liquidation Cascade Forecaster`: owns one part of the analysis loop.
-- `Treasury Action Planner`: owns one part of the analysis loop.
+- `Liquidity Sentinel`: owns pool-depth and capital-flight telemetry.
+- `Oracle Divergence Analyst`: checks oracle spread and stale-feed risk.
+- `Bridge Exposure Mapper`: maps bridge outflow stress and blast radius.
+- `Liquidation Cascade Forecaster`: estimates liquidation queue pressure.
+- `Treasury Action Planner`: converts findings into executable operator actions.
+
+## Output contract
+
+Every report returns:
+
+- project
+- domain
+- scenario
+- risk_score
+- confidence
+- verdict
+- findings[]
+- next_actions[]
+- trace_id
+- generated_at
 
 ## Production extension points
 
@@ -33,3 +50,4 @@ Autonomous multi-agent risk desk for liquidity shocks, oracle anomalies, bridge 
 - Persist reports in Postgres or SQLite.
 - Add auth and organization workspaces.
 - Add export hooks for Slack, Discord, Telegram, or email.
+- Add human approval workflow for high-impact treasury actions.

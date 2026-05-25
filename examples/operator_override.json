@@ -1,0 +1,10 @@
+{
+  "scenario": "bridge stress during stablecoin depeg",
+  "signals": {
+    "pool_depth_change": 84,
+    "oracle_spread_bps": 112,
+    "bridge_outflow_usd": 73000000,
+    "liquidation_queue_usd": 42000000,
+    "governance_delay_hours": 36
+  }
+}
